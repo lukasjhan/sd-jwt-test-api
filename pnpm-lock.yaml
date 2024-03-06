@@ -8,6 +8,15 @@ dependencies:
   '@hono/node-server':
     specifier: ^1.8.2
     version: 1.8.2
+  '@sd-jwt/core':
+    specifier: 0.3.2-next.107
+    version: 0.3.2-next.107
+  '@sd-jwt/crypto-nodejs':
+    specifier: 0.3.2-next.107
+    version: 0.3.2-next.107
+  '@sd-jwt/types':
+    specifier: 0.3.2-next.107
+    version: 0.3.2-next.107
   hono:
     specifier: ^4.0.8
     version: 4.0.8
@@ -225,6 +234,41 @@ packages:
     engines: {node: '>=18.14.1'}
     dev: false
 
+  /@sd-jwt/core@0.3.2-next.107:
+    resolution: {integrity: sha512-B77/4i/01R8lnXSfPDITZdN+1MOcviSsgsqlxICOQjSL8eWoKjtMwQvI+e3zHLqVgw2O0p7zbNBDhymqxFR3IA==}
+    engines: {node: '>=16'}
+    dependencies:
+      '@sd-jwt/decode': 0.3.2-next.107
+      '@sd-jwt/types': 0.3.2-next.107
+      '@sd-jwt/utils': 0.3.2-next.107
+    dev: false
+
+  /@sd-jwt/crypto-nodejs@0.3.2-next.107:
+    resolution: {integrity: sha512-thHe0ZGJrja/PY4iAyDblV3axBfPSX9jNMSp4fwuy6nVgMspEZBDpvSMyY+yDVRZe2ol4CNj6uY/1M7imOIOsA==}
+    engines: {node: '>=16'}
+    dev: false
+
+  /@sd-jwt/decode@0.3.2-next.107:
+    resolution: {integrity: sha512-GZBzslcyAYgMzs63BnkOY2+AJVmg2Vh5aAAR1y8TlHzaAe1UxNIiCwLOcJpQt+nkCmBDxO4P9rOLMMBHQ5WFEQ==}
+    engines: {node: '>=16'}
+    dependencies:
+      '@sd-jwt/types': 0.3.2-next.107
+      '@sd-jwt/utils': 0.3.2-next.107
+    dev: false
+
+  /@sd-jwt/types@0.3.2-next.107:
+    resolution: {integrity: sha512-mft02chJEYvucDhD0FM/czILG5SA8DHYHuhl3yWZZx+KUTmtSe3IVfJ4BzZIWPtyr2B2FhEjX9Cz4XjxzDQZ3Q==}
+    engines: {node: '>=16'}
+    dev: false
+
+  /@sd-jwt/utils@0.3.2-next.107:
+    resolution: {integrity: sha512-VdeZLUu2Lj3ZWCqyyETOBM6X1JJufpBzOUJnJK/u0oBuY88DO5u4Ha76u43R+UNgMYgoUad/W5rQl87Bt7w7Ng==}
+    engines: {node: '>=16'}
+    dependencies:
+      '@sd-jwt/types': 0.3.2-next.107
+      js-base64: 3.7.7
+    dev: false
+
   /@types/node@20.11.24:
     resolution: {integrity: sha512-Kza43ewS3xoLgCEpQrsT+xRo/EJej1y0kVYGiLFE1NEODXGzTfwiC6tXTLMQskn1X4/Rjlh0MQUvx9W+L9long==}
     dependencies:
@@ -282,6 +326,10 @@ packages:
   /hono@4.0.8:
     resolution: {integrity: sha512-zhTXu32vXeEXajsqZVjPfoyO0/fgAKLLmPBpSDzRBMr7zZ5N8yV1FmsfWl2MYtm+MD8hD7knLCovx8Oaqubd4w==}
     engines: {node: '>=16.0.0'}
+    dev: false
+
+  /js-base64@3.7.7:
+    resolution: {integrity: sha512-7rCnleh0z2CkXhH67J8K1Ytz0b2Y+yxTPL+/KOJoa20hfnVQ/3/T6W/KflYI4bRHRagNeXeU2bkNGI3v1oS/lw==}
     dev: false
 
   /resolve-pkg-maps@1.0.0:
