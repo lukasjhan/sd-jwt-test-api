@@ -66,9 +66,10 @@ app.post('/tests/issue/p1', async (c) => {
 });
 
 /*
- * 문제2 : fraim
+ * 문제2 : credential,
+    presentationFrame 을 줄테니
+    present한 토큰 결과값을 반환해.
  */
-
 app.get('/tests/present/p1', async (c) => {
   return c.json({
     description: 'verify that the result is correct when you put in presentPrame',
@@ -83,8 +84,41 @@ app.post('/tests/present/p1', async (c) => {
   if (!answer) {
     throw new HTTPException(400, { message: 'bad request' });
   }
+
+  if (typeof answer !== 'string') {
+    throw new HTTPException(400, {
+      message: 'bad request You didnt put an object or JSON type in there, did you? You need to insert a token!',
+    });
+  }
+
   const submittedClaims = await sdjwt.getClaims(answer);
   const isCorrect = isEqual(submittedClaims, presentationClaim);
+  return c.json({ isCorrect });
+});
+
+/*
+ * 문제2 : credential,
+    presentationFrame 을 줄테니 
+    결과값을 보여줘
+ */
+
+app.get('/tests/present/p3', async (c) => {
+  return c.json({
+    description: 'verify that the result is correct when you put in presentPrame',
+    credential,
+    presentationFrame,
+  });
+});
+
+app.post('/tests/present/p3', async (c) => {
+  const { answer } = await c.req.json<{ answer: string }>();
+  if (typeof answer === 'string') {
+    throw new HTTPException(400, {
+      message:
+        'bad request You didnt put an object or token type in there, did you? You need to insert a object or JSON !',
+    });
+  }
+  const isCorrect = isEqual(answer, presentationClaim);
   return c.json({ isCorrect });
 });
 
@@ -92,3 +126,10 @@ serve({
   fetch: app.fetch,
   port,
 });
+
+// - sd를 하겠다고 선언한 `claim`들이 정상적으로 처리(세팅)가 되었는지 테스트한다.
+// - 검증 error가 제대로 나는지 테스트한다.
+//     - 표준 기준에 어긋난 `claim` 인지 테스트한다. 예를 들면 표준 기준에서 `header type : kbt jwt`라고 작성하라고 명시했지만 해당 기준에 맞지 않게 작성되지 않았을 때 에러를 뱉는다.
+// - 임의로 서명을 변경하여 (조작된 서명을 사용하여) **`validate`** 및 **`verify`** 메서드에서 올바르지 않은 서명으로 처리되는지 확인한다.
+// - sd 에 아무 값도 들어가지 않았을때 (disclosure 허용된 것이 없을 때 다른 claim을 숨기려고 하면 에러를 반환해야 한다.
+// - present 된 것뿐안 아닌, issue에 대한 값도 추가적으로 테스트한다.
