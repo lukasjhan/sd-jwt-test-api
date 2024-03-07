@@ -1,6 +1,6 @@
 import { serve } from '@hono/node-server';
 import { SDJwtInstance } from '@sd-jwt/core';
-import { claims, disclosureFrame, presentationClaim, presentationFrame } from './datas/claim';
+import { claims, disclosureFrame, presentationClaim, presentationFrame, credential } from './datas/claim';
 import { endpoints } from './datas/endpoint';
 import { Hono } from 'hono';
 import isEqual from 'lodash.isequal';
@@ -58,7 +58,6 @@ app.post('/tests/issue/p1', async (c) => {
   }
 
   const submittedClaims = await sdjwt.getClaims(answer);
-  console.log(submittedClaims);
   const isCorrect = isEqual(submittedClaims, claims);
 
   return c.json({
@@ -72,8 +71,8 @@ app.post('/tests/issue/p1', async (c) => {
 
 app.get('/tests/present/p1', async (c) => {
   return c.json({
-    description: 'presentPrame을 넣었을 때 제대로 결과값이 나오는지 확인해보세요',
-    claims,
+    description: 'verify that the result is correct when you put in presentPrame',
+    credential,
     presentationFrame,
   });
 });
@@ -84,8 +83,8 @@ app.post('/tests/present/p1', async (c) => {
   if (!answer) {
     throw new HTTPException(400, { message: 'bad request' });
   }
-
-  const isCorrect = isEqual(answer, presentationClaim);
+  const submittedClaims = await sdjwt.getClaims(answer);
+  const isCorrect = isEqual(submittedClaims, presentationClaim);
   return c.json({ isCorrect });
 });
 
