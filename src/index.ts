@@ -38,7 +38,7 @@ app.get('/tests/issue/p1', (c) => {
   return c.json({
     description: 'Issue a SD-JWT token with given claims and disclosureFrame',
     claims,
-    presentationFrame,
+    disclosureFrame,
   });
 });
 
@@ -65,7 +65,7 @@ app.get('/tests/present/p1', async (c) => {
   return c.json({
     description: 'presentPrame을 넣었을 때 제대로 결과값이 나오는지 확인해보세요',
     claims,
-    disclosureFrame,
+    presentationFrame,
   });
 });
 
