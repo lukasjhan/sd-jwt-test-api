@@ -1,10 +1,11 @@
-import { serve } from "@hono/node-server";
-import { SDJwtInstance } from "@sd-jwt/core";
-import { DisclosureFrame } from "@sd-jwt/types";
-import { Hono } from "hono";
-import isEqual from "lodash.isequal";
-import { ES256, digest, generateSalt } from "@sd-jwt/crypto-nodejs";
-import { HTTPException } from "hono/http-exception";
+import { serve } from '@hono/node-server';
+import { SDJwtInstance } from '@sd-jwt/core';
+import { claims, disclosureFrame, presentationClaim, presentationFrame } from './datas/claim';
+import { endpoints } from './datas/endpoint';
+import { Hono } from 'hono';
+import isEqual from 'lodash.isequal';
+import { ES256, digest, generateSalt } from '@sd-jwt/crypto-nodejs';
+import { HTTPException } from 'hono/http-exception';
 
 const app = new Hono();
 const sdjwt = new SDJwtInstance({
@@ -14,80 +15,39 @@ const sdjwt = new SDJwtInstance({
 /**
  * tests data has test names of each cases
  */
+
+const port = 5600;
+console.log(`Server is running on port ${port}`);
+
 const tests = {
-  issue: ["testa", "testb"],
+  issue: ['testa', 'testb'],
   decode: [],
   present: [],
   verify: [],
 };
 
-const endpoints = [
-  "/test-lists",
-  "/keypairs",
-  "/tests/issue/{test-name}",
-  "/tests/present/{test-name}",
-  "/tests/verify/{test-name}",
-  "/tests/decode/{test-name}",
-  "/tests/present/{test-name}",
-  "/tests/issue/{test-name}",
-  "/tests/decode/{test-name}",
-];
-
-const claims = {
-  firstname: "John",
-  lastname: "Doe",
-  ssn: "123-45-6789",
-  id: "1234",
-  data: {
-    firstname: "John",
-    lastname: "Doe",
-    ssn: "123-45-6789",
-    list: [{ r: "1" }, "b", "c"],
-  },
-  data2: {
-    hi: "bye",
-  },
-};
-
-const disclosureFrame: DisclosureFrame<typeof claims> = {
-  _sd: ["firstname", "id", "data2"],
-  data: {
-    _sd: ["list"],
-    _sd_decoy: 2,
-    list: {
-      _sd: [0, 2],
-      _sd_decoy: 1,
-      0: {
-        _sd: ["r"],
-      },
-    },
-  },
-  data2: {
-    _sd: ["hi"],
-  },
-};
-
-app.get("/test-lists", (c) => {
+app.get('/test-lists', (c) => {
   return c.json({ result: endpoints });
 });
 
-app.get("/tests/issue/p1", (c) => {
-  // Issuer Define the disclosure frame to specify which claims can be disclosed
+/*
+ * 문제1 : claims 와 disclosureFrame 줄테니까 토큰 발급해봐
+ */
 
+app.get('/tests/issue/p1', (c) => {
   return c.json({
-    description: "Issue a SD-JWT token with given claims and disclosureFrame",
+    description: 'Issue a SD-JWT token with given claims and disclosureFrame',
     claims,
-    disclosureFrame,
+    presentationFrame,
   });
 });
 
-app.post("/tests/issue/p1", async (c) => {
+app.post('/tests/issue/p1', async (c) => {
   const { answer } = await c.req.json<{ answer: string }>();
 
   if (!answer) {
-    throw new HTTPException(400, { message: "bad request" });
+    throw new HTTPException(400, { message: 'bad request' });
   }
-  // tree: 10000000
 
   const submittedClaims = await sdjwt.getClaims(answer);
   const isCorrect = isEqual(submittedClaims, claims);
@@ -97,12 +57,29 @@ app.post("/tests/issue/p1", async (c) => {
   });
 });
 
-app.post("/", async (c) => {
-  return c.json({ result: "hello world!" });
+/*
+ * 문제2 : fraim
+ */
+
+app.get('/tests/present/p1', async (c) => {
+  return c.json({
+    description: 'presentPrame을 넣었을 때 제대로 결과값이 나오는지 확인해보세요',
+    claims,
+    disclosureFrame,
+  });
 });
 
-const port = 5600;
-console.log(`Server is running on port ${port}`);
+app.post('/tests/present/p1', async (c) => {
+  const { answer } = await c.req.json<{ answer: string }>();
+
+  if (!answer) {
+    throw new HTTPException(400, { message: 'bad request' });
+  }
+
+  const submittedPresentaion = await sdjwt.getClaims(answer);
+  const isCorrect = isEqual(submittedPresentaion, presentationClaim);
+  return c.json({ isCorrect });
+});
 
 serve({
   fetch: app.fetch,
