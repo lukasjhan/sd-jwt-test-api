@@ -34,7 +34,7 @@ app.get('/test-lists', (c) => {
  * 문제1 : claims 와 disclosureFrame 줄테니까 토큰 발급해봐
  */
 
-app.get('/tests/issue/p1', (c) => {
+app.get('/test/issue/p1', (c) => {
   return c.json({
     description: 'Issue a SD-JWT token with given claims and disclosureFrame',
     claims,
@@ -44,7 +44,7 @@ app.get('/tests/issue/p1', (c) => {
 
 // answer : 'eyJhbGciOiJFUzI1NiJ9.eyJsYXN0bmFtZSI6IkRvZSIsInNzbiI6IjEyMy00NS02Nzg5IiwiZGF0YSI6eyJmaXJzdG5hbWUiOiJKb2huIiwibGFzdG5hbWUiOiJEb2UiLCJzc24iOiIxMjMtNDUtNjc4OSIsIl9zZCI6WyIzbzBmYVlnaGpnSUFEcnlacHh5WjlLMGdXVEt6SXNUamJBZWZ5Z2RtZFZJIiwiRFhueUVxa25oSHdkcmpKbzZ2UWpkVXA5bnI5WGdVVldHeWhJbkxpdktsQSIsInJ3X3BnVmZ0OEJsc3FTQ3Nnczk4OXN6aVNnY0loNzFwRGw1VDI2YzNUNDQiXX0sIl9zZCI6WyJGVUtCdW81WXFSbmY2N0VhZzV5RHAxeVVpb2xCSEZnQmEweGc1MWdKTGI4IiwiaTNubWw0YW9GNFZZZUt6NUdZdnVjeXJ5VDM4TlVxUG00QXZaTzY4eUVNTSIsImtWVU1nX1hGcjBwamdkbTl1cFpUbTgxVkVjaWF5LTJaOWd2Rmo5RkhBWXMiXSwiX3NkX2FsZyI6IlNIQS0yNTYifQ.927feVeSgpUkXqleM6fq1xRNUWsmqFDKjU4sWlT4UUPk3SLKKETCscP7eLbldXBugjQ11H4GKnCxSLPsbRsLDA~WyI5YjQzZTg3MTUzNmZkOTBmIiwiciIsIjEiXQ~WyIwZjVlZDQzNjU0YTBhZGFlIix7Il9zZCI6WyItd3A2cUdCSzVsVExLbTloY2JnenYxT2tUdnZyYnFoVDFBTDlEd3ZPNjVjIl19XQ~WyI4NzIwMTk3NDlhY2Q5NTdlIiwiYyJd~WyIwNGRlYjY0MmI2OWI1ZTAwIiwibGlzdCIsW3siLi4uIjoiTWlaTWNuSUs5bmE2aW9qcTBRZ00xREQxOENRaklGRl83cFFqamNIZ0RlcyJ9LCJiIix7Ii4uLiI6InpsNXd6QllKcDNUTjN4TzFNUlNWbURoTVZIajhQTHZ4cUwxUVBYeks4Vk0ifSx7Ii4uLiI6Imd1djBEZ3ZSSFh1bjN5dFdfWndWQWpHT05kNE40eDVKOHZpVFFlOVJ5RDgifV1d~WyJjMzEyOWJlZTU4NWRiZGU4IiwiaGkiLCJieWUiXQ~WyJmODk4ZWE0MTQwYjRmMjNiIiwiZmlyc3RuYW1lIiwiSm9obiJd~WyIyMzY3YWE1YmIyYjc1MGRlIiwiaWQiLCIxMjM0Il0~WyIzMTEyYTRjNWE1NzI3YWQyIiwiZGF0YTIiLHsiX3NkIjpbIlpKNWFUSi1QeUZKcEMtTmNMUWpnbzFnclFGN0hZYkF0QVY1YlNBbGh0dTQiXX1d~'
 
-app.post('/tests/issue/p1', async (c) => {
+app.post('/test/issue/p1', async (c) => {
   const { answer } = await c.req.json<{ answer: string }>();
 
   if (!answer) {
@@ -70,7 +70,7 @@ app.post('/tests/issue/p1', async (c) => {
     presentationFrame 을 줄테니
     present한 토큰 결과값을 반환해.
  */
-app.get('/tests/present/p1', async (c) => {
+app.get('/test/present/p1', async (c) => {
   return c.json({
     description: 'verify that the result is correct when you put in presentPrame',
     credential,
@@ -97,12 +97,12 @@ app.post('/tests/present/p1', async (c) => {
 });
 
 /*
- * 문제2 : credential,
+ * 문제3 : credential,
     presentationFrame 을 줄테니 
     결과값을 보여줘
  */
 
-app.get('/tests/present/p3', async (c) => {
+app.get('/test/present/p1', async (c) => {
   return c.json({
     description: 'verify that the result is correct when you put in presentPrame',
     credential,
@@ -110,7 +110,7 @@ app.get('/tests/present/p3', async (c) => {
   });
 });
 
-app.post('/tests/present/p3', async (c) => {
+app.post('/test/present/p1', async (c) => {
   const { answer } = await c.req.json<{ answer: string }>();
   if (typeof answer === 'string') {
     throw new HTTPException(400, {
@@ -119,6 +119,35 @@ app.post('/tests/present/p3', async (c) => {
     });
   }
   const isCorrect = isEqual(answer, presentationClaim);
+  return c.json({ isCorrect });
+});
+
+/*
+ * 문제4 : 4번 째 문제 뭐 만들지..issue에 대한걸 만들어보자
+ */
+
+app.get('/test/issue/p2', async (c) => {
+  return c.json({
+    description: 'jwt header type 을 검사한다.',
+  });
+});
+
+type HeaderType = {
+  typ: string;
+  alg: string;
+};
+
+app.post('/tests/issue/p2', async (c) => {
+  const { answer } = await c.req.json<{ answer: { header: HeaderType } }>();
+
+  if (!answer.header) {
+    throw new HTTPException(400, {
+      message:
+        'bad request You didnt put an object or token type in there, did you? You need to insert a object or JSON !',
+    });
+  }
+
+  const isCorrect = answer.header.typ === 'sd+jwt' ? true : false;
   return c.json({ isCorrect });
 });
 
