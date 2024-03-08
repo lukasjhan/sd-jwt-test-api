@@ -58,6 +58,7 @@ app.post('/test/issue/p1', async (c) => {
   }
 
   const submittedClaims = await sdjwt.getClaims(answer);
+  // TODO: verify.
   const isCorrect = isEqual(submittedClaims, claims);
 
   return c.json({
@@ -101,7 +102,9 @@ app.post('/tests/present/p1', async (c) => {
  */
 app.get('/test/issue/p2', async (c) => {
   return c.json({
-    description: 'jwt header type 을 검사한다.',
+    description: 'verify JWT headers are compliant with the standard',
+    claims,
+    disclosureFrame,
   });
 });
 
@@ -111,16 +114,11 @@ type HeaderType = {
 };
 
 app.post('/tests/issue/p2', async (c) => {
-  const { answer } = await c.req.json<{ answer: { header: HeaderType } }>();
+  const { answer } = await c.req.json();
 
-  if (!answer.header) {
-    throw new HTTPException(400, {
-      message:
-        'bad request You didnt put an object or token type in there, did you? You need to insert a object or JSON !',
-    });
-  }
+  const header = await sdjwt.decode(answer);
+  const isCorrect = header.jwt?.header?.typ === 'sd-jwt';
 
-  const isCorrect = answer.header.typ === 'sd+jwt' ? true : false;
   return c.json({ isCorrect });
 });
 
