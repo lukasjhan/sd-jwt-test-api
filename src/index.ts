@@ -102,7 +102,7 @@ app.post('/tests/present/p1', async (c) => {
     결과값을 보여줘
  */
 
-app.get('/test/present/p1', async (c) => {
+app.get('/test/present/p2', async (c) => {
   return c.json({
     description: 'verify that the result is correct when you put in presentPrame',
     credential,
@@ -110,7 +110,7 @@ app.get('/test/present/p1', async (c) => {
   });
 });
 
-app.post('/test/present/p1', async (c) => {
+app.post('/test/present/p2', async (c) => {
   const { answer } = await c.req.json<{ answer: string }>();
   if (typeof answer === 'string') {
     throw new HTTPException(400, {
