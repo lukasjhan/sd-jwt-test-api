@@ -136,18 +136,22 @@ app.get('/test/issue/p3', async (c) => {
 });
 
 app.post('/tests/issue/p3', async (c) => {
-  const { answer } = await c.req.json();
+  try {
+    const { answer } = await c.req.json();
 
-  const submittedClaims = await sdjwt.getClaims(answer);
-  const isCorrect = isEqual(submittedClaims, claims);
+    const submittedClaims = await sdjwt.getClaims(answer);
+    const isCorrect = isEqual(submittedClaims, claims);
 
-  if (!isCorrect) {
+    if (!isCorrect) {
+      return c.json({ isCorrect: false });
+    }
+
+    const x = await sdjwt.presentableKeys(answer);
+    const isCorrectSdClaim = isEqual(x, presentableKeyList);
+    return c.json({ isCorrect: isCorrectSdClaim });
+  } catch (error) {
     return c.json({ isCorrect: false });
   }
-
-  const x = await sdjwt.presentableKeys(answer);
-  const isCorrectSdClaim = isEqual(x, presentableKeyList);
-  return c.json({ isCorrectSdClaim });
 });
 
 serve({
