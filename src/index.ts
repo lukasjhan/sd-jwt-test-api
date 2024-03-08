@@ -97,35 +97,8 @@ app.post('/tests/present/p1', async (c) => {
 });
 
 /*
- * 문제3 : credential,
-    presentationFrame 을 줄테니 
-    결과값을 보여줘
+ * 문제3 :
  */
-
-app.get('/test/present/p2', async (c) => {
-  return c.json({
-    description: 'verify that the result is correct when you put in presentPrame',
-    credential,
-    presentationFrame,
-  });
-});
-
-app.post('/test/present/p2', async (c) => {
-  const { answer } = await c.req.json<{ answer: string }>();
-  if (typeof answer === 'string') {
-    throw new HTTPException(400, {
-      message:
-        'bad request You didnt put an object or token type in there, did you? You need to insert a object or JSON !',
-    });
-  }
-  const isCorrect = isEqual(answer, presentationClaim);
-  return c.json({ isCorrect });
-});
-
-/*
- * 문제4 : 4번 째 문제 뭐 만들지..issue에 대한걸 만들어보자
- */
-
 app.get('/test/issue/p2', async (c) => {
   return c.json({
     description: 'jwt header type 을 검사한다.',
