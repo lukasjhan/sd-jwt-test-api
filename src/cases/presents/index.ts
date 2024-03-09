@@ -15,7 +15,7 @@ import * as no_sd from './no_sd';
 
 /**
  * @description
- * Test cases for issues.
+ * Test cases for presents.
  * Each case should have a `credential`, `claims`, `presentationFrame`, and `kb` export.
  *
  */
