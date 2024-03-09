@@ -24,7 +24,7 @@ const getSDJwt = async () => {
     return sdjwt;
   }
 
-  sdjwt = new SDJwtInstance({
+  sdjwt = new SDJwtInstance<Record<string, unknown>>({
     hasher: digest,
     saltGenerator: generateSalt,
     hashAlg: 'sha-256',
