@@ -17,7 +17,7 @@ import { KeyPair } from './key';
 
 const app = new Hono();
 
-let sdjwt: undefined | SDJwtInstance<{}>;
+let sdjwt: undefined | SDJwtInstance<Record<string, unknown>>;
 
 const getSDJwt = async () => {
   if (sdjwt) {
