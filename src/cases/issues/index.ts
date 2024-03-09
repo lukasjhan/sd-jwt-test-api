@@ -9,6 +9,12 @@ import * as array_of_objects from './array_of_objects';
 import * as recursions from './recursions';
 import * as array_recursions from './array_recursions';
 
+/**
+ * @description
+ * Test cases for issues.
+ * Each case should have a `claims`, `disclosureFrame`, and `presentableKeys` export.
+ *
+ */
 export const testcases = {
   simple,
   data_types,
