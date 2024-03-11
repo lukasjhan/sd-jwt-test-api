@@ -147,6 +147,7 @@ app.post('/tests/issue/p2', async (c) => {
 /*
  * 문제5 :
  */
+
 app.get('/test/issue/p3', async (c) => {
   return c.json({
     description: 'test that the claims declared to be SD are processed (set) correctly.',
@@ -173,6 +174,26 @@ app.post('/tests/issue/p3', async (c) => {
   } catch (error) {
     return c.json({ isCorrect: false });
   }
+});
+
+/*
+ * 문제6 : I will give you a token, get a presentable Key
+ */
+
+const keys = ['data.list', 'data.list.0', 'data.list.0.r', 'data.list.2', 'data2', 'data2.hi', 'firstname', 'id'];
+
+app.get('/test/issue/p5', async (c) => {
+  return c.json({
+    description: 'I will give you a token, get a presentable Key',
+    token:
+      'eyJhbGciOiJFUzI1NiJ9.eyJsYXN0bmFtZSI6IkRvZSIsInNzbiI6IjEyMy00NS02Nzg5IiwiZGF0YSI6eyJmaXJzdG5hbWUiOiJKb2huIiwibGFzdG5hbWUiOiJEb2UiLCJzc24iOiIxMjMtNDUtNjc4OSIsIl9zZCI6WyJGb1VsbDhSbERHRzlxS1AxdmlSNERfR054cVBUak9LYTFrcWEzaWpndzUwIiwiSGVNdUtlalVVVWxiX3g0Qmg5VUIzcXg1ckx2STNJS2FHYmd6Rk1jVjdEZyIsInZFQkRJbHU1MWQyM2kzczROWW5vMDllNFBicC1mblM3cnRuMEltZFdHME0iXX0sImlhdCI6MTcxMDEzNzIyOC44NTksImlzcyI6IkV4YW1wbGVJc3N1ZXIiLCJ2Y3QiOiJodHRwczovL2V4YW1wbGUuY29tL3NjaGVtYS8xIiwiX3NkIjpbImdWVExGZ2JGY3RIYlF0emJFRU1CUzdHTTB1VGZiNjFTbkhrdjYwa3E3bUEiLCJwMU82Tjgya1BEZ0FGVzV1TFM0TlZlSlE0bFp0RTJZUzdJWEU3RjYzVDZFIiwic2pHaF9pYzducVFMam9GU1Y1d08wemNiaHBFcXVQZUFGRTZLN3dKNVhTQSJdLCJfc2RfYWxnIjoiU0hBLTI1NiJ9.OPhQBRU9AqhGlNxc8vEmdei3d2iF-3FQUtaotZkWA2wQEFo_Zsy24fh3Eaz3YDApuwMmLLQsJAyE5F1JkWfl1g~WyIzNjAwOWFkZjI5MDljMjg5IiwiciIsIjEiXQ~WyIyYWViNDBhMmNkOTBlN2Y5Iix7Il9zZCI6WyJXcnZZZVhfb1IxV3V4Rk5QUmZYZ0lXOWRWVnhNRFhHa1R5cXMtZ196WVZZIl19XQ~WyJmZmU2NmQwZjZmNTZiZjdhIiwiYyJd~WyJmMzJkZmJkZGUwNTE0ZWJiIiwibGlzdCIsW3siLi4uIjoiMHNDQ0E0VDhIRmtpbkt0c0xiUjdWLXJNNjF6ZjZnOExUaHVTTWg0QkF4RSJ9LCJiIix7Ii4uLiI6IlVBbjV6Mk0yUlhsMDJRYkdlUnNBeG90NWxVLVN0N0JoTWJkS0hDLW1PU3cifSx7Ii4uLiI6IkJmQmw5aHZZYVRwWjFFRVdwVDdXaURFMEZHV1d0bUlCWi02M3VCVW85UUUifV1d~WyJlMWVkYjhmOWM5MzY4MWJjIiwiaGkiLCJieWUiXQ~WyIxYjY3NDQzMGI2OTc1OWVlIiwiZmlyc3RuYW1lIiwiSm9obiJd~WyJlODVhMGVhNjEzNzM5ZWVmIiwiaWQiLCIxMjM0Il0~WyI5NjE2Mzg4YTVjYmRjMzU2IiwiZGF0YTIiLHsiX3NkIjpbIm1WUFlSa0ZQTHhaMWNDQnpYZzFGLXpSU21hc1Y4cmtXMjU4MWJCR0tTYlUiXX1d~',
+  });
+});
+
+app.post('/tests/issue/p5', async (c) => {
+  const { answer } = await c.req.json();
+  const isCorrectSdClaim = isEqual(answer, keys);
+  return c.json({ isCorrect: isCorrectSdClaim });
 });
 
 serve({
