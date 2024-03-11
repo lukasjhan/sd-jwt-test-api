@@ -3,13 +3,15 @@
     "dev": "tsx watch src/index.ts"
   },
   "dependencies": {
-    "@sd-jwt/core": "0.3.2-next.107",
-    "@sd-jwt/types": "0.3.2-next.107",
-    "@sd-jwt/crypto-nodejs": "0.3.2-next.107",
     "@hono/node-server": "^1.8.2",
-    "hono": "^4.0.8"
+    "@sd-jwt/core": "0.4.0",
+    "@sd-jwt/crypto-nodejs": "0.4.0",
+    "@sd-jwt/types": "0.4.0",
+    "hono": "^4.0.8",
+    "lodash.isequal": "^4.5.0"
   },
   "devDependencies": {
+    "@types/lodash.isequal": "^4.5.8",
     "@types/node": "^20.11.17",
     "tsx": "^3.12.2"
   }

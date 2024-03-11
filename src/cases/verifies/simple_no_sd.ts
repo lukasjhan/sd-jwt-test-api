@@ -1,0 +1,4 @@
+export const credential =
+  'eyJhbGciOiJFUzI1NiJ9.eyJfc2QiOlsiOG5hekk2WU9CbHBobVR2NmtOZHBtU3pkZkhneTlpNmRXelo4SjlrclVEZyJdLCJfc2RfYWxnIjoic2hhLTI1NiJ9.AzmWNzbyefN5qEBNF2DdNbnkaXqOkGNqA9cOn1Xr-nZQu4ukvz12lc6LRKUGfVuU7EL0dmc349XO4zQFlCNJvQ~';
+
+export const result = true;
