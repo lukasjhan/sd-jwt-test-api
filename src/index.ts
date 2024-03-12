@@ -1,6 +1,5 @@
 import { serve } from '@hono/node-server';
 import { SDJwtInstance } from '@sd-jwt/core';
-import { endpoint } from './datas/endpoint';
 import { Hono } from 'hono';
 import isEqual from 'lodash.isequal';
 import { ES256, digest, generateSalt } from '@sd-jwt/crypto-nodejs';
@@ -82,7 +81,7 @@ app.get('/tests/present/:name', (c) => {
     throw new HTTPException(404, { message: 'test not found' });
   }
 
-  const { credential, presentationFrame } = presentedNames[name];
+  const { credential, presentationFrame } = presentTestCases[name];
 
   return c.json({ results: { description, credential, presentationFrame } });
 });
@@ -95,7 +94,7 @@ app.post(`/tests/present/:name`, async (c) => {
 
   const sdjwt = await getSDJwt();
 
-  const { claims } = presentedNames[name];
+  const { claims } = presentTestCases[name];
 
   try {
     const { answer } = await c.req.json(); //get a token
@@ -117,7 +116,7 @@ app.get('/tests/verify/:name', (c) => {
     throw new HTTPException(404, { message: 'test not found' });
   }
 
-  const { credential } = verifyedNames[name];
+  const { credential } = verifyTestCases[name];
 
   return c.json({ results: { description, credential } });
 });
@@ -129,15 +128,11 @@ app.post(`/tests/verify/:name`, async (c) => {
   }
 
   const sdjwt = await getSDJwt();
-  const { claims } = verifyedNames[name];
+  const { result } = verifyTestCases[name];
 
   try {
     const { answer } = await c.req.json();
-    await sdjwt.validate(answer);
-
-    const submittedClaims = await sdjwt.getClaims(answer);
-    const isCorrect = isEqual(submittedClaims, claims);
-    return c.json({ results: isCorrect });
+    return c.json({ results: answer === result });
   } catch (error) {
     return c.json({ results: false });
   }
@@ -152,7 +147,7 @@ app.get('/tests/issue/:name', (c) => {
   }
 
   // TODO: check type
-  const { disclosureFrame, claims } = issuedNames[name];
+  const { disclosureFrame, claims } = issueTestCases[name];
 
   return c.json({ results: { description, claims, disclosureFrame } });
 });
@@ -164,7 +159,7 @@ app.post(`/tests/issue/:name`, async (c) => {
   }
 
   const sdjwt = await getSDJwt();
-  const { claims } = issuedNames[name];
+  const { claims } = issueTestCases[name];
 
   try {
     const { answer } = await c.req.json(); //get a token
