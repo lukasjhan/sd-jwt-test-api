@@ -14,6 +14,7 @@ import isEqual from 'lodash.isequal';
 import { ES256, digest, generateSalt } from '@sd-jwt/crypto-nodejs';
 import { HTTPException } from 'hono/http-exception';
 import { KeyPair } from './key';
+import { testcases as decodeTestCases } from './cases/decodes';
 
 const app = new Hono();
 
@@ -35,6 +36,27 @@ const getSDJwt = async () => {
 
   return sdjwt;
 };
+
+const decodeNames = Object.keys(decodeTestCases);
+console.log(decodeNames);
+
+app.get('/tests/decode/:name', (c) => {
+  const name = c.req.param('name');
+  if (!decodeNames.includes(name)) {
+    throw new HTTPException(404, { message: 'test not found' });
+  }
+
+  // TODO: check type
+  const testName = name as keyof typeof decodeTestCases;
+  const { credential } = decodeTestCases[testName];
+
+  return c.json({
+    results: {
+      credential,
+      description: 'hello world!',
+    },
+  });
+});
 
 /**
  * tests data has test names of each cases
