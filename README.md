@@ -2,6 +2,8 @@
 
 This is a simple API server to test the various SD-JWT library implementations in different languages.
 
+See the standard of [SD-JWT](https://datatracker.ietf.org/doc/draft-ietf-oauth-selective-disclosure-jwt/) and [SD-JWT VC](https://datatracker.ietf.org/doc/draft-ietf-oauth-sd-jwt-vc/)
+
 ## How to run
 
 ```bash
