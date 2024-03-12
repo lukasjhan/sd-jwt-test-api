@@ -39,6 +39,45 @@ const getSDJwt = async () => {
   return sdjwt;
 };
 
+app.get('/test-lists', (c) => {
+  const issueApiList = issuedNames
+    .map((name) => `/tests/issue/${name}`)
+    .flatMap((path) => [
+      { path, method: 'GET' },
+      { path, method: 'POST' },
+    ]);
+  const decodeApiList = decodeNames
+    .map((name) => `/tests/decode/${name}`)
+    .flatMap((path) => [
+      { path, method: 'GET' },
+      { path, method: 'POST' },
+    ]);
+  const presentApiList = presentedNames
+    .map((name) => `/tests/present/${name}`)
+    .flatMap((path) => [
+      { path, method: 'GET' },
+      { path, method: 'POST' },
+    ]);
+  const verifyApiList = verifyedNames
+    .map((name) => `/tests/verify/${name}`)
+    .flatMap((path) => [
+      { path, method: 'GET' },
+      { path, method: 'POST' },
+    ]);
+
+  return c.json({
+    results: {
+      apiList: [...issueApiList, ...decodeApiList, ...presentApiList, ...verifyApiList],
+    },
+  });
+});
+
+app.get('/keys', (c) => {
+  return c.json({
+    results: KeyPair,
+  });
+});
+
 app.get('/tests/decode/:name', (c) => {
   const description = 'I will give you token, you have to send me a claim!';
   const name = c.req.param('name') as keyof typeof decodeTestCases;
