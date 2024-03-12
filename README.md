@@ -1,6 +1,6 @@
-# This project is using Hono
+# SD-JWT Testing API server
 
-Hono: https://hono.dev/
+This is a simple API server to test the various SD-JWT library implementations in different languages.
 
 ## How to run
 
@@ -17,3 +17,11 @@ Server will be running on localhost:5600
 ```bash
 http://localhost:5600
 ```
+
+## How to Test?
+
+TBD
+
+## How it works?
+
+Thjs project is built using Hono: https://hono.dev/
