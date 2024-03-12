@@ -54,6 +54,16 @@ app.get('/test-lists', (c) => {
   return c.json({ result: endpoints });
 });
 
+app.get('/test/example/:testName', (c) => {
+  const testName = c.req.param('testName');
+
+  if (testName === 'not found') {
+    throw new HTTPException(404, { message: 'test not found' });
+  }
+
+  return c.json({ result: testName });
+});
+
 /*
  * 문제1 : claims 와 disclosureFrame 줄테니까 토큰 발급해봐
  */
