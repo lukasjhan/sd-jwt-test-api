@@ -37,18 +37,22 @@ const getSDJwt = async () => {
   return sdjwt;
 };
 
-const decodeNames = Object.keys(decodeTestCases);
-console.log(decodeNames);
+function getKeyOfTests<T extends Record<string, unknown>>(testcases: T): (keyof T)[] {
+  return Object.keys(testcases) as (keyof T)[];
+}
+
+// This is a type guard function
+function checkTestName(name: string): name is keyof typeof decodeTestCases {
+  return Object.keys(decodeTestCases).includes(name);
+}
 
 app.get('/tests/decode/:name', (c) => {
   const name = c.req.param('name');
-  if (!decodeNames.includes(name)) {
+  if (!checkTestName(name)) {
     throw new HTTPException(404, { message: 'test not found' });
   }
 
-  // TODO: check type
-  const testName = name as keyof typeof decodeTestCases;
-  const { credential } = decodeTestCases[testName];
+  const { credential } = decodeTestCases[name];
 
   return c.json({
     results: {
