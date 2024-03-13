@@ -166,7 +166,6 @@ app.post(`/tests/verify/:name`, async (c) => {
     throw new HTTPException(404, { message: 'test not found' });
   }
 
-  const sdjwt = await getSDJwt();
   const { result } = verifyTestCases[name];
 
   try {
@@ -181,7 +180,7 @@ app.get('/tests/issue/:name', (c) => {
   const description = 'I will give you claim, you have to send me a token!';
   const name = c.req.param('name') as keyof typeof issueTestCases;
 
-  if (!verifyedNames.includes(name)) {
+  if (!issuedNames.includes(name)) {
     throw new HTTPException(404, { message: 'test not found' });
   }
 
