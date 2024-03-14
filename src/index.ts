@@ -34,6 +34,9 @@ const getSDJwt = async () => {
     signAlg: ES256.alg,
     signer: await ES256.getSigner(KeyPair.privateKey),
     verifier: await ES256.getVerifier(KeyPair.publicKey),
+    kbSigner: await ES256.getSigner(KeyPair.privateKey),
+    kbSignAlg: ES256.alg,
+    kbVerifier: await ES256.getVerifier(KeyPair.publicKey),
   });
 
   return sdjwt;
