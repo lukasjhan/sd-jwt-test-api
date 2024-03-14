@@ -191,7 +191,7 @@ app.get('/tests/issue/:name', (c) => {
   const description = 'I will give you claim, you have to send me a token!';
   const name = c.req.param('name') as keyof typeof issueTestCases;
 
-  if (!verifyedNames.includes(name)) {
+  if (!issuedNames.includes(name)) {
     throw new HTTPException(404, { message: 'test not found' });
   }
 
