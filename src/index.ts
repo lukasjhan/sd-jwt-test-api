@@ -34,6 +34,9 @@ const getSDJwt = async () => {
     signAlg: ES256.alg,
     signer: await ES256.getSigner(KeyPair.privateKey),
     verifier: await ES256.getVerifier(KeyPair.publicKey),
+    kbSigner: await ES256.getSigner(KeyPair.privateKey),
+    kbSignAlg: ES256.alg,
+    kbVerifier: await ES256.getVerifier(KeyPair.publicKey),
   });
 
   return sdjwt;
@@ -120,27 +123,43 @@ app.get('/tests/present/:name', (c) => {
     throw new HTTPException(404, { message: 'test not found' });
   }
 
-  const { credential, presentationFrame } = presentTestCases[name];
+  const { credential, presentationFrame, kb } = presentTestCases[name];
 
-  return c.json({ results: { description, credential, presentationFrame } });
+  return c.json({ results: { description, credential, presentationFrame, kb } });
 });
 
 app.post(`/tests/present/:name`, async (c) => {
   const name = c.req.param('name') as keyof typeof presentTestCases;
+
   if (!presentedNames.includes(name)) {
     throw new HTTPException(404, { message: 'test not found' });
   }
 
-  const sdjwt = await getSDJwt();
-
-  const { claims } = presentTestCases[name];
-
   try {
+    // kb : key bind
+    const { claims, kb: kbQuestion } = presentTestCases[name];
     const { answer } = await c.req.json(); //get a token
-    await sdjwt.validate(answer);
+    const sdjwt = await getSDJwt();
 
-    const submittedClaims = await sdjwt.getClaims(answer);
-    const isCorrect = isEqual(submittedClaims, claims);
+    if (!kbQuestion) {
+      //normal test
+      const { payload } = await sdjwt.verify(answer);
+      const isCorrect = isEqual(payload, claims);
+      return c.json({ results: isCorrect });
+    }
+
+    //key bind test
+    const { payload, kb: kbAnswer } = await sdjwt.verify(answer, undefined, true);
+
+    if (!kbAnswer?.payload) {
+      return c.json({ results: false });
+    }
+
+    const { nonce: nonceAnswer, aud: audAnswer } = kbAnswer.payload;
+    const { nonce: nonceQuestion, aud: audQuestion } = kbQuestion;
+
+    const isCorrect = isEqual(payload, claims) && nonceQuestion === nonceAnswer && audQuestion === audAnswer;
+
     return c.json({ results: isCorrect });
   } catch (error) {
     return c.json({ results: false });

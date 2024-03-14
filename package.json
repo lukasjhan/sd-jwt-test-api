@@ -1,7 +1,8 @@
 {
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "prod": "tsx src/index.ts"
+    "prod": "tsx src/index.ts",
+    "tester": "tsx tester src/index.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1.8.2",
