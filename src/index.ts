@@ -123,27 +123,35 @@ app.get('/tests/present/:name', (c) => {
     throw new HTTPException(404, { message: 'test not found' });
   }
 
-  const { credential, presentationFrame } = presentTestCases[name];
+  const { credential, presentationFrame, kb } = presentTestCases[name];
 
-  return c.json({ results: { description, credential, presentationFrame } });
+  return c.json({ results: { description, credential, presentationFrame, kb } });
 });
 
 app.post(`/tests/present/:name`, async (c) => {
   const name = c.req.param('name') as keyof typeof presentTestCases;
+
   if (!presentedNames.includes(name)) {
     throw new HTTPException(404, { message: 'test not found' });
   }
 
-  const sdjwt = await getSDJwt();
-
-  const { claims } = presentTestCases[name];
-
   try {
+    const { claims, kb } = presentTestCases[name];
     const { answer } = await c.req.json(); //get a token
-    await sdjwt.validate(answer);
+    const sdjwt = await getSDJwt();
 
-    const submittedClaims = await sdjwt.getClaims(answer);
-    const isCorrect = isEqual(submittedClaims, claims);
+    if (!kb) {
+      await sdjwt.verify(answer, undefined, false);
+      const submittedClaims = await sdjwt.getClaims(answer);
+      const isCorrect = isEqual(submittedClaims, claims);
+      return c.json({ results: isCorrect });
+    }
+
+    // const keyBindPresent = await sdjwt.present(credential, presentationFrame, {
+    //   kb: { payload: kb },
+    // });
+    const { payload } = await sdjwt.verify(answer, undefined, true);
+    const isCorrect = isEqual(payload, claims);
     return c.json({ results: isCorrect });
   } catch (error) {
     return c.json({ results: false });
@@ -169,7 +177,6 @@ app.post(`/tests/verify/:name`, async (c) => {
     throw new HTTPException(404, { message: 'test not found' });
   }
 
-  const sdjwt = await getSDJwt();
   const { result } = verifyTestCases[name];
 
   try {
