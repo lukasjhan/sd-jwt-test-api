@@ -136,22 +136,30 @@ app.post(`/tests/present/:name`, async (c) => {
   }
 
   try {
-    const { claims, kb } = presentTestCases[name];
+    // kb : key bind
+    const { claims, kb: kbQuestion } = presentTestCases[name];
     const { answer } = await c.req.json(); //get a token
     const sdjwt = await getSDJwt();
 
-    if (!kb) {
-      await sdjwt.verify(answer, undefined, false);
-      const submittedClaims = await sdjwt.getClaims(answer);
-      const isCorrect = isEqual(submittedClaims, claims);
+    if (!kbQuestion) {
+      //normal test
+      const { payload } = await sdjwt.verify(answer, undefined, true);
+      const isCorrect = isEqual(payload, claims);
       return c.json({ results: isCorrect });
     }
 
-    // const keyBindPresent = await sdjwt.present(credential, presentationFrame, {
-    //   kb: { payload: kb },
-    // });
-    const { payload } = await sdjwt.verify(answer, undefined, true);
-    const isCorrect = isEqual(payload, claims);
+    //key bind test
+    const { payload, kb: kbAnswer } = await sdjwt.verify(answer, undefined, true);
+
+    if (!kbAnswer?.payload) {
+      return c.json({ results: false });
+    }
+
+    const { nonce: nonceAnswer, aud: audAnswer } = kbAnswer?.payload;
+    const { nonce: nonceQuestion, aud: audQuestion } = kbQuestion;
+
+    const isCorrect = isEqual(payload, claims) && nonceQuestion === nonceAnswer && audQuestion === audAnswer;
+
     return c.json({ results: isCorrect });
   } catch (error) {
     return c.json({ results: false });
