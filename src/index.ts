@@ -143,7 +143,7 @@ app.post(`/tests/present/:name`, async (c) => {
 
     if (!kbQuestion) {
       //normal test
-      const { payload } = await sdjwt.verify(answer, undefined, true);
+      const { payload } = await sdjwt.verify(answer);
       const isCorrect = isEqual(payload, claims);
       return c.json({ results: isCorrect });
     }
