@@ -185,10 +185,14 @@ If you're familiar with Javascript(axios), you can reference the `tester` direct
 }
 ```
 
-## How it works?
-
-Thjs project is built using Hono: https://hono.dev/
-
 ## Docker
 
 dockerHub : https://hub.docker.com/repository/docker/treeyoon/sd-jwt-test-api/general
+
+```bash
+docker run -p 5600:5600 treeyoon/sd-jwt-test-api:latest
+```
+
+## How it works?
+
+Thjs project is built using Hono: https://hono.dev/
