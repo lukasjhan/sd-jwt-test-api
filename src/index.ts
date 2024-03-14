@@ -155,7 +155,7 @@ app.post(`/tests/present/:name`, async (c) => {
       return c.json({ results: false });
     }
 
-    const { nonce: nonceAnswer, aud: audAnswer } = kbAnswer?.payload;
+    const { nonce: nonceAnswer, aud: audAnswer } = kbAnswer.payload;
     const { nonce: nonceQuestion, aud: audQuestion } = kbQuestion;
 
     const isCorrect = isEqual(payload, claims) && nonceQuestion === nonceAnswer && audQuestion === audAnswer;
