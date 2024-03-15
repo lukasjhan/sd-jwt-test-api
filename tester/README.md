@@ -5,6 +5,8 @@ It uses Typescript SD-JWT library implementation to test. see (https://github.co
 
 ## How to use test
 
+Run the [test API server](../README.md) and then run the following commands.
+
 ```bash
 pnpm install
 
