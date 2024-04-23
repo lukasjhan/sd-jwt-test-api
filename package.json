@@ -9,7 +9,7 @@
     "@sd-jwt/core": "^0.6.0",
     "@sd-jwt/crypto-nodejs": "^0.6.0",
     "@sd-jwt/types": "^0.6.0",
-    "hono": "^4.0.8",
+    "hono": "^4.2.7",
     "lodash.isequal": "^4.5.0"
   },
   "devDependencies": {
